@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instant HTML - Paste Code and Download File</title>
+    <meta name="description" content="A simple, fast utility to paste any text or code and download it as a clean .html file. Instant HTML provides a neumorphic interface with syntax highlighting for quick conversions.">
+    <meta name="keywords" content="Instant HTML, HTML download, paste to HTML, code to file, HTML utility, online tool, Chris Pirillo, web developer tool, code exporter">
+    <meta name="author" content="Chris Pirillo">
+    <link rel="canonical" href="https://pirillo.com/arcade/instant-html.html">
+    <meta property="og:title" content="Instant HTML">
+    <meta property="og:description" content="A simple utility to paste any text or code and download it as a clean .html file.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pirillo.com/arcade/instant-html.html">
+    <meta property="og:image" content="https://pirillo.com/arcade/images/instant-html.png">
+    <meta property="og:image:width" content="837">
+    <meta property="og:image:height" content="518">
+    <meta property="og:site_name" content="Pirillo.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ChrisPirillo">
+    <meta name="twitter:creator" content="@ChrisPirillo">
+    <meta name="twitter:title" content="Instant HTML">
+    <meta name="twitter:description" content="A simple utility to paste any text or code and download it as a clean .html file.">
+    <meta name="twitter:image" content="https://pirillo.com/arcade/images/instant-html.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1CQ4D3VQ3L"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-1CQ4D3VQ3L');
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Instant HTML",
+      "description": "A simple utility to paste any text or code and download it as a clean .html file.",
+      "url": "https://pirillo.com/arcade/instant-html.html",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "author": {"@type": "Person", "name": "Chris Pirillo", "url": "https://pirillo.com/"},
+      "publisher": {"@type": "Organization", "name": "Pirillo.com", "logo": {"@type": "ImageObject", "url": "https://pirillo.com/images/chrispirillo.jpg"}}
+    }
+    </script>
+    <style>
+        :root {
+            --nm-bg-color: #e0e5ec;
+            --nm-light-shadow: #ffffff;
+            --nm-dark-shadow: #a3b1c6;
+            --nm-text-color: #3e516d;
+            --nm-accent-color: #4a7bfc;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--nm-bg-color);
+        }
+        .header-title, #downloadBtn {
+            user-select: none;
+        }
+        #downloadBtn {
+            border-radius: 10px;
+            background: var(--nm-bg-color);
+            box-shadow: 8px 8px 16px var(--nm-dark-shadow), -8px -8px 16px var(--nm-light-shadow);
+            color: var(--nm-accent-color);
+            transition: all 0.2s ease-in-out;
+            font-weight: 600;
+        }
+        #downloadBtn:hover {
+            color: #3b66d4;
+            box-shadow: 6px 6px 12px var(--nm-dark-shadow), -6px -6px 12px var(--nm-light-shadow);
+        }
+        #downloadBtn:active {
+            box-shadow: inset 4px 4px 8px var(--nm-dark-shadow), inset -4px -4px 8px var(--nm-light-shadow);
+        }
+
+        #editor {
+            padding: 1.5rem;
+            border-radius: 20px;
+            height: 50vh;
+            overflow: auto;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 21px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            tab-size: 4;
+            -moz-tab-size: 4;
+            box-sizing: border-box;
+            background-color: var(--nm-bg-color);
+            color: var(--nm-text-color);
+            outline: none;
+            resize: none; 
+            box-shadow: inset 8px 8px 16px var(--nm-dark-shadow), inset -8px -8px 16px var(--nm-light-shadow);
+        }
+        #editor::-webkit-scrollbar {
+            display: none;
+        }
+        #editor {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* FULL SYNTAX HIGHLIGHTING STYLES */
+        .token-comment, .token-doctype { color: #9ca3af; font-style: italic; }
+        .token-punctuation { color: #a1a1aa; }
+        .token-tag-default { color: #52525b; }
+        .token-attr-name { color: #4d7c0f; }
+        .token-attr-value { color: #1d4ed8; }
+        .token-tag-root { color: #dc2626; }
+        .token-tag-metadata { color: #9333ea; }
+        .token-tag-heading { color: #be185d; }
+        .token-tag-layout { color: #2563eb; }
+        .token-tag-text { color: #0f766e; }
+        .token-tag-list { color: #ea580c; }
+        .token-tag-table { color: #ca8a04; }
+        .token-tag-form { color: #65a30d; }
+        .token-tag-media { color: #c026d3; }
+        .token-tag-interactive { color: #db2777; }
+        .token-tag-scripting { color: #d97706; }
+        .token-css-selector { color: #be185d; } 
+        .token-css-property { color: #0891b2; } 
+        .token-css-value { color: #16a3a4; } 
+        .token-js-keyword { color: #9333ea; } 
+        .token-js-function { color: #c026d3; } 
+        .token-js-string { color: #0891b2; } 
+        .token-js-number, .token-js-boolean { color: #d97706; }
+    </style>
+</head>
+<body class="bg-gray-200">
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold header-title">Instant HTML</h1>
+            <p class="text-gray-500">Paste any text or code, then download it as an `.html` file.</p>
+        </header>
+        
+        <main>
+            <div id="editor" contenteditable="true" spellcheck="false"></div>
+        </main>
+
+        <footer class="text-center mt-10">
+            <button id="downloadBtn" class="py-4 px-8 rounded-lg flex items-center justify-center mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                Download HTML File
+            </button>
+        </footer>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editor = document.getElementById('editor');
+        const downloadBtn = document.getElementById('downloadBtn');
+        let initialTextCleared = false; // Flag to ensure text is cleared only once
+
+        const tagColorMap = { 'html': 'token-tag-root', 'head': 'token-tag-metadata', 'title': 'token-tag-metadata', 'base': 'token-tag-metadata', 'link': 'token-tag-metadata', 'meta': 'token-tag-metadata', 'style': 'token-tag-scripting', 'body': 'token-tag-layout', 'address': 'token-tag-layout', 'article': 'token-tag-layout', 'aside': 'token-tag-layout', 'footer': 'token-tag-layout', 'header': 'token-tag-layout', 'h1': 'token-tag-heading', 'h2': 'token-tag-heading', 'h3': 'token-tag-heading', 'h4': 'token-tag-heading', 'h5': 'token-tag-heading', 'h6': 'token-tag-heading', 'main': 'token-tag-layout', 'nav': 'token-tag-layout', 'section': 'token-tag-layout', 'blockquote': 'token-tag-text', 'dd': 'token-tag-list', 'div': 'token-tag-layout', 'dl': 'token-tag-list', 'dt': 'token-tag-list', 'figcaption': 'token-tag-media', 'figure': 'token-tag-media', 'hr': 'token-tag-text', 'li': 'token-tag-list', 'ol': 'token-tag-list', 'p': 'token-tag-text', 'pre': 'token-tag-text', 'ul': 'token-tag-list', 'a': 'token-tag-interactive', 'abbr': 'token-tag-text', 'b': 'token-tag-text', 'bdi': 'token-tag-text', 'bdo': 'token-tag-text', 'br': 'token-tag-text', 'cite': 'token-tag-text', 'code': 'token-tag-text', 'data': 'token-tag-text', 'dfn': 'token-tag-text', 'em': 'token-tag-text', 'i': 'token-tag-text', 'kbd': 'token-tag-text', 'mark': 'token-tag-text', 'q': 'token-tag-text', 'rp': 'token-tag-text', 'rt': 'token-tag-text', 'ruby': 'token-tag-text', 's': 'token-tag-text', 'samp': 'token-tag-text', 'small': 'token-tag-text', 'span': 'token-tag-text', 'strong': 'token-tag-text', 'sub': 'token-tag-text', 'sup': 'token-tag-text', 'time': 'token-tag-text', 'u': 'token-tag-text', 'var': 'token-tag-text', 'wbr': 'token-tag-text', 'area': 'token-tag-media', 'audio': 'token-tag-media', 'img': 'token-tag-media', 'map': 'token-tag-media', 'track': 'token-tag-media', 'video': 'token-tag-media', 'embed': 'token-tag-media', 'iframe': 'token-tag-media', 'object': 'token-tag-media', 'param': 'token-tag-media', 'picture': 'token-tag-media', 'portal': 'token-tag-media', 'source': 'token-tag-media', 'svg': 'token-tag-media', 'math': 'token-tag-media', 'canvas': 'token-tag-scripting', 'noscript': 'token-tag-scripting', 'script': 'token-tag-scripting', 'del': 'token-tag-text', 'ins': 'token-tag-text', 'caption': 'token-tag-table', 'col': 'token-tag-table', 'colgroup': 'token-tag-table', 'table': 'token-tag-table', 'tbody': 'token-tag-table', 'td': 'token-tag-table', 'tfoot': 'token-tag-table', 'th': 'token-tag-table', 'thead': 'token-tag-table', 'tr': 'token-tag-table', 'button': 'token-tag-form', 'datalist': 'token-tag-form', 'fieldset': 'token-tag-form', 'form': 'token-tag-form', 'input': 'token-tag-form', 'label': 'token-tag-form', 'legend': 'token-tag-form', 'meter': 'token-tag-form', 'optgroup': 'token-tag-form', 'option': 'token-tag-form', 'output': 'token-tag-form', 'progress': 'token-tag-form', 'select': 'token-tag-form', 'textarea': 'token-tag-form', 'details': 'token-tag-interactive', 'dialog': 'token-tag-interactive', 'menu': 'token-tag-interactive', 'summary': 'token-tag-interactive', 'slot': 'token-tag-interactive', 'template': 'token-tag-interactive'};
+
+        function escapeHtml(text) { return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+        
+        function highlightCss(text) {
+            let escaped = escapeHtml(text);
+            escaped = escaped.replace(/\/\*[\s\S]*?\*\//g, m => `<span class="token-comment">${m}</span>`);
+            escaped = escaped.replace(/([^{}]+)({)/g, (m, s, b) => `<span class="token-css-selector">${s.trim()}</span> ${b}`);
+            escaped = escaped.replace(/([\w-]+)\s*:\s*([^;}]+)/g, (m, p, v) => `<span class="token-css-property">${p}</span>: <span class="token-css-value">${v.trim()}</span>`);
+            return escaped;
+        }
+
+        function highlightJs(text) {
+            let escaped = escapeHtml(text);
+            // Updated string regex to include template literals (`...`)
+            escaped = escaped.replace(/("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|`([\s\S]*?)`)/g, m => `<span class="token-js-string">${m}</span>`);
+            escaped = escaped.replace(/(\/\*[\s\S]*?\*\/|\/\/[^\n]*)/g, m => `<span class="token-comment">${m}</span>`);
+            escaped = escaped.replace(/\b(const|let|var|function|return|if|else|for|while|new|this|async|await|import|export|from|class|extends|super|try|catch|finally)\b/g, m => `<span class="token-js-keyword">${m}</span>`);
+            escaped = escaped.replace(/\b(true|false|null|undefined)\b/g, m => `<span class="token-js-boolean">${m}</span>`);
+            escaped = escaped.replace(/\b(function\s+)(\w+)/g, (m, k, n) => `${k}<span class="token-js-function">${n}</span>`);
+            escaped = escaped.replace(/(\.)(\w+)(?=\()/g, (m, d, n) => `${d}<span class="token-js-function">${n}</span>`);
+            escaped = escaped.replace(/\b[0-9]+(\.[0-9]+)?\b/g, m => `<span class="token-js-number">${m}</span>`);
+            return escaped;
+        }
+
+        function highlightAttributes(attrs) {
+            if (!attrs) return '';
+            return attrs.replace(/([\w-.:]+)(\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?/g, (match, name, valuePart) => {
+                if (valuePart) {
+                    return `<span class="token-attr-name">${name}</span><span class="token-attr-value">${escapeHtml(valuePart)}</span>`;
+                }
+                return `<span class="token-attr-name">${name}</span>`;
+            });
+        }
+        
+        function applySyntaxHighlighting(text) {
+            const tokenizer = /(<!--[\s\S]*?-->)|(<!DOCTYPE[^>]*>)|(<style[^>]*>[\s\S]*?<\/style>)|(<script[^>]*>[\s\S]*?<\/script>)|(<\/?[\w\d-]+(?:[^>"']|"[^"]*"|'[^']*')*?>)|([^<&]+)/g;
+            return text.replace(tokenizer, (match, comment, doctype, style, script, tag, plainText) => {
+                if (comment) return `<span class="token-comment">${escapeHtml(comment)}</span>`;
+                if (doctype) return `<span class="token-doctype">${escapeHtml(doctype)}</span>`;
+                if (style) {
+                    const openTagMatch = style.match(/^<style([^>]*)>/i);
+                    const attrs = openTagMatch ? openTagMatch[1] : '';
+                    const content = style.substring(openTagMatch[0].length, style.length - 8);
+                    const tagClass = tagColorMap['style'] || 'token-tag-default';
+                    return `<span class="token-punctuation">&lt;</span><span class="${tagClass}">style</span>${highlightAttributes(attrs)}<span class="token-punctuation">&gt;</span>${highlightCss(content)}<span class="token-punctuation">&lt;/</span><span class="${tagClass}">style</span><span class="token-punctuation">&gt;</span>`;
+                }
+                if (script) {
+                    const openTagMatch = script.match(/^<script([^>]*)>/i);
+                    const attrs = openTagMatch ? openTagMatch[1] : '';
+                    const content = script.substring(openTagMatch[0].length, script.length - 9);
+                    const tagClass = tagColorMap['script'] || 'token-tag-default';
+                    return `<span class="token-punctuation">&lt;</span><span class="${tagClass}">script</span>${highlightAttributes(attrs)}<span class="token-punctuation">&gt;</span>${highlightJs(content)}<span class="token-punctuation">&lt;/</span><span class="${tagClass}">script</span><span class="token-punctuation">&gt;</span>`;
+                }
+                if (tag) {
+                    return tag.replace(/(<\/?)([\w\d-]+)([^>]*)(>)/s, (m, open, tagName, attrs, close) => {
+                        const tagClass = tagColorMap[tagName.toLowerCase()] || 'token-tag-default';
+                        return `<span class="token-punctuation">${escapeHtml(open)}</span><span class="${tagClass}">${tagName}</span>${highlightAttributes(attrs)}<span class="token-punctuation">${escapeHtml(close)}</span>`;
+                    });
+                }
+                if (plainText) return escapeHtml(plainText);
+                return escapeHtml(match);
+            });
+        }
+        
+        function saveCursorPosition(context) {
+            const selection = window.getSelection();
+            if (selection.rangeCount === 0) return null;
+            const range = selection.getRangeAt(0);
+            const preSelectionRange = range.cloneRange();
+            preSelectionRange.selectNodeContents(context);
+            preSelectionRange.setEnd(range.startContainer, range.startOffset);
+            return preSelectionRange.toString().length;
+        }
+
+        function restoreCursorPosition(context, savedPosition) {
+            if (savedPosition === null) return;
+            const range = document.createRange();
+            const sel = window.getSelection();
+            const nodeStack = [context];
+            let charIndex = 0;
+            let foundStart = false;
+
+            while(nodeStack.length > 0 && !foundStart) {
+                const node = nodeStack.pop();
+                if (node.nodeType === 3) { // Text node
+                    const nextCharIndex = charIndex + node.length;
+                    if (savedPosition >= charIndex && savedPosition <= nextCharIndex) {
+                        range.setStart(node, savedPosition - charIndex);
+                        foundStart = true;
+                    }
+                    charIndex = nextCharIndex;
+                } else {
+                    let i = node.childNodes.length;
+                    while(i--) {
+                        nodeStack.push(node.childNodes[i]);
+                    }
+                }
+            }
+            if (foundStart) {
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        }
+
+        function updateContent() {
+            const cursorPos = saveCursorPosition(editor);
+            const text = editor.innerText;
+            editor.innerHTML = applySyntaxHighlighting(text);
+            restoreCursorPosition(editor, cursorPos);
+        }
+
+        // --- FIX: The 'input' listener was the source of the code corruption. ---
+        // It continuously re-highlighted the code on every keystroke, which was
+        // unreliable and would alter the code. By removing it, we ensure the code's
+        // integrity is preserved after pasting. Pasted code will appear as plain text.
+        
+        // editor.addEventListener('input', debouncedUpdate);
+        
+        editor.addEventListener('paste', (e) => {
+            e.preventDefault();
+            // This inserts the pasted data as plain text, ensuring it's not corrupted.
+            const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+            document.execCommand('insertText', false, text);
+        });
+        
+        editor.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                document.execCommand('insertText', false, '    ');
+            }
+        });
+
+        // New event listener to clear content on first click/focus
+        editor.addEventListener('focus', function() {
+            if (!initialTextCleared) {
+                // We just clear the text. Without the 'input' listener, 
+                // it no longer needs to call updateContent().
+                editor.innerText = '';
+                initialTextCleared = true;
+            }
+        }, { once: true });
+
+        function getTitleFromHtml(html) {
+            const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+            if (titleMatch && titleMatch[1]) {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = titleMatch[1];
+                const rawTitle = (tempDiv.textContent || tempDiv.innerText || '').trim();
+                if (rawTitle) {
+                    return rawTitle.replace(/[^a-z0-9\s-]/gi, '').replace(/\s+/g, '_') + '.html';
+                }
+            }
+            return 'instant.html';
+        }
+
+        downloadBtn.addEventListener('click', function() {
+            // This now gets the clean, unmodified text from the editor.
+            const fileContent = editor.innerText;
+            if (fileContent.trim() === '') return;
+            const filename = getTitleFromHtml(fileContent);
+            const blob = new Blob([fileContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+        
+        const initialCode = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Page</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* This is CSS */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome!</h1>
+    <p>This is a paragraph with <strong>bold</strong> and <em>italic</em> text.</p>
+    
+    <a href="#">This is a link.</a>
+    
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+      </tr>
+      <tr>
+        <td>Chris</td>
+        <td>42</td>
+      </tr>
+    </table>
+    
+    <button onclick="greet()">Click Me</button>
+    
+    <script>
+        // This is JavaScript
+        const message = "Hello, World!";
+        function greet() {
+            console.log(message);
+            return true;
+        }
+        greet();
+    <\/script>
+</body>
+</html>`;
+        
+        // Set the initial demo code and highlight it once on load.
+        editor.innerText = initialCode;
+        updateContent();
+    });
+    </script>
+</body>
+</html>
