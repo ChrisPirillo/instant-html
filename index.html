@@ -95,6 +95,8 @@
             color: var(--nm-text-color);
             user-select: none;
             white-space: pre;
+            height: 50vh;
+            overflow: hidden;
         }
 
         #editor {
@@ -291,7 +293,7 @@
 
         function updateContent() {
             const cursorPos = saveCursorPosition(editor);
-            const text = editor.innerText;
+            const text = editor.textContent;
             editor.innerHTML = applySyntaxHighlighting(text);
             restoreCursorPosition(editor, cursorPos);
             updateLineNumbers(text);
@@ -312,19 +314,19 @@
         });
         
         editor.addEventListener('input', function() {
-            updateLineNumbers(editor.innerText);
+            updateLineNumbers(editor.textContent);
         });
 
         editor.addEventListener('keydown', function(e) {
             if (e.key === 'Tab') {
                 e.preventDefault();
                 document.execCommand('insertText', false, '    ');
-                updateLineNumbers(editor.innerText);
+                updateLineNumbers(editor.textContent);
             }
         });
 
         editor.addEventListener('scroll', function() {
-            lineNumbers.scrollTop = editor.scrollTop;
+            lineNumbers.style.transform = `translateY(-${editor.scrollTop}px)`;
         });
 
         // New event listener to clear content on first click/focus
