@@ -77,9 +77,29 @@
             box-shadow: inset 4px 4px 8px var(--nm-dark-shadow), inset -4px -4px 8px var(--nm-light-shadow);
         }
 
-        #editor {
-            padding: 1.5rem;
+        #editorWrapper {
+            display: flex;
             border-radius: 20px;
+            box-shadow: inset 8px 8px 16px var(--nm-dark-shadow), inset -8px -8px 16px var(--nm-light-shadow);
+            background-color: var(--nm-bg-color);
+            overflow: hidden;
+        }
+
+        #lineNumbers {
+            padding: 1.5rem 0 1.5rem 1.5rem;
+            margin-right: 1rem;
+            text-align: right;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 21px;
+            color: var(--nm-text-color);
+            user-select: none;
+            white-space: pre;
+        }
+
+        #editor {
+            flex: 1;
+            padding: 1.5rem;
             height: 50vh;
             overflow: auto;
             font-family: 'Fira Code', 'Courier New', Courier, monospace;
@@ -90,11 +110,10 @@
             tab-size: 4;
             -moz-tab-size: 4;
             box-sizing: border-box;
-            background-color: var(--nm-bg-color);
+            background-color: transparent;
             color: var(--nm-text-color);
             outline: none;
-            resize: none; 
-            box-shadow: inset 8px 8px 16px var(--nm-dark-shadow), inset -8px -8px 16px var(--nm-light-shadow);
+            resize: none;
         }
         #editor::-webkit-scrollbar {
             display: none;
@@ -138,7 +157,10 @@
         </header>
         
         <main>
-            <div id="editor" contenteditable="true" spellcheck="false"></div>
+            <div id="editorWrapper">
+                <pre id="lineNumbers"></pre>
+                <div id="editor" contenteditable="true" spellcheck="false"></div>
+            </div>
         </main>
 
         <footer class="text-center mt-10">
@@ -153,6 +175,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const editor = document.getElementById('editor');
         const downloadBtn = document.getElementById('downloadBtn');
+        const lineNumbers = document.getElementById("lineNumbers");
         let initialTextCleared = false; // Flag to ensure text is cleared only once
 
         const tagColorMap = { 'html': 'token-tag-root', 'head': 'token-tag-metadata', 'title': 'token-tag-metadata', 'base': 'token-tag-metadata', 'link': 'token-tag-metadata', 'meta': 'token-tag-metadata', 'style': 'token-tag-scripting', 'body': 'token-tag-layout', 'address': 'token-tag-layout', 'article': 'token-tag-layout', 'aside': 'token-tag-layout', 'footer': 'token-tag-layout', 'header': 'token-tag-layout', 'h1': 'token-tag-heading', 'h2': 'token-tag-heading', 'h3': 'token-tag-heading', 'h4': 'token-tag-heading', 'h5': 'token-tag-heading', 'h6': 'token-tag-heading', 'main': 'token-tag-layout', 'nav': 'token-tag-layout', 'section': 'token-tag-layout', 'blockquote': 'token-tag-text', 'dd': 'token-tag-list', 'div': 'token-tag-layout', 'dl': 'token-tag-list', 'dt': 'token-tag-list', 'figcaption': 'token-tag-media', 'figure': 'token-tag-media', 'hr': 'token-tag-text', 'li': 'token-tag-list', 'ol': 'token-tag-list', 'p': 'token-tag-text', 'pre': 'token-tag-text', 'ul': 'token-tag-list', 'a': 'token-tag-interactive', 'abbr': 'token-tag-text', 'b': 'token-tag-text', 'bdi': 'token-tag-text', 'bdo': 'token-tag-text', 'br': 'token-tag-text', 'cite': 'token-tag-text', 'code': 'token-tag-text', 'data': 'token-tag-text', 'dfn': 'token-tag-text', 'em': 'token-tag-text', 'i': 'token-tag-text', 'kbd': 'token-tag-text', 'mark': 'token-tag-text', 'q': 'token-tag-text', 'rp': 'token-tag-text', 'rt': 'token-tag-text', 'ruby': 'token-tag-text', 's': 'token-tag-text', 'samp': 'token-tag-text', 'small': 'token-tag-text', 'span': 'token-tag-text', 'strong': 'token-tag-text', 'sub': 'token-tag-text', 'sup': 'token-tag-text', 'time': 'token-tag-text', 'u': 'token-tag-text', 'var': 'token-tag-text', 'wbr': 'token-tag-text', 'area': 'token-tag-media', 'audio': 'token-tag-media', 'img': 'token-tag-media', 'map': 'token-tag-media', 'track': 'token-tag-media', 'video': 'token-tag-media', 'embed': 'token-tag-media', 'iframe': 'token-tag-media', 'object': 'token-tag-media', 'param': 'token-tag-media', 'picture': 'token-tag-media', 'portal': 'token-tag-media', 'source': 'token-tag-media', 'svg': 'token-tag-media', 'math': 'token-tag-media', 'canvas': 'token-tag-scripting', 'noscript': 'token-tag-scripting', 'script': 'token-tag-scripting', 'del': 'token-tag-text', 'ins': 'token-tag-text', 'caption': 'token-tag-table', 'col': 'token-tag-table', 'colgroup': 'token-tag-table', 'table': 'token-tag-table', 'tbody': 'token-tag-table', 'td': 'token-tag-table', 'tfoot': 'token-tag-table', 'th': 'token-tag-table', 'thead': 'token-tag-table', 'tr': 'token-tag-table', 'button': 'token-tag-form', 'datalist': 'token-tag-form', 'fieldset': 'token-tag-form', 'form': 'token-tag-form', 'input': 'token-tag-form', 'label': 'token-tag-form', 'legend': 'token-tag-form', 'meter': 'token-tag-form', 'optgroup': 'token-tag-form', 'option': 'token-tag-form', 'output': 'token-tag-form', 'progress': 'token-tag-form', 'select': 'token-tag-form', 'textarea': 'token-tag-form', 'details': 'token-tag-interactive', 'dialog': 'token-tag-interactive', 'menu': 'token-tag-interactive', 'summary': 'token-tag-interactive', 'slot': 'token-tag-interactive', 'template': 'token-tag-interactive'};
@@ -260,12 +283,19 @@
                 sel.addRange(range);
             }
         }
+        function updateLineNumbers(text) {
+            const lines = text.split(/\n/).length || 1;
+            lineNumbers.textContent = Array.from({ length: lines }, (_, i) => i + 1).join('\n');
+        }
+
+
 
         function updateContent() {
             const cursorPos = saveCursorPosition(editor);
             const text = editor.innerText;
             editor.innerHTML = applySyntaxHighlighting(text);
             restoreCursorPosition(editor, cursorPos);
+            updateLineNumbers(text);
         }
 
         // --- FIX: The 'input' listener was the source of the code corruption. ---
@@ -280,6 +310,7 @@
             // This inserts the pasted data as plain text, ensuring it's not corrupted.
             const text = (e.clipboardData || window.clipboardData).getData('text/plain');
             document.execCommand('insertText', false, text);
+            updateContent();
         });
         
         editor.addEventListener('keydown', function(e) {
@@ -290,14 +321,13 @@
         });
 
         // New event listener to clear content on first click/focus
-        editor.addEventListener('focus', function() {
-            if (!initialTextCleared) {
-                // We just clear the text. Without the 'input' listener, 
-                // it no longer needs to call updateContent().
-                editor.innerText = '';
-                initialTextCleared = true;
-            }
-        }, { once: true });
+            editor.addEventListener('focus', function() {
+                if (!initialTextCleared) {
+                    editor.innerText = '';
+                    initialTextCleared = true;
+                    updateLineNumbers('');
+                }
+            }, { once: true });
 
         function getTitleFromHtml(html) {
             const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
